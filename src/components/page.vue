@@ -21,14 +21,19 @@
     </aside>
     <main>
       <div class="mainInformation">
-        <h1>饶家俊</h1>
-        <p>应聘职位: 前端工程师</p>
-        <p>生日: 1995年12月 | 性别: 男 | 邮箱: 471412450@qq.com | 手机号码: 15702097950</p>
+        <h1>
+          <editableSpan :informationDetail="information.name" @typeInput="listenInput"></editableSpan>
+        </h1>
+        <p>应聘职位: <editableSpan :informationDetail="information.job"></editableSpan></p>
+        <p>生日:<editableSpan :informationDetail="information.birthday"></editableSpan>
+          | 性别:<editableSpan :informationDetail="information.gender"></editableSpan>
+          | 邮箱: <editableSpan :informationDetail="information.email"></editableSpan>
+          | 手机号码: <editableSpan :informationDetail="information.phone"></editableSpan>
+        </p>
       </div>
-      <editable-span></editable-span>
-
       <div class="skills">
         <h2>技能</h2>
+        {{information}}
         <ul>
           <li>
             <span class="name">静态页面制作</span>
@@ -117,7 +122,20 @@
     name: 'page',
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App'
+        information:{
+          name:"rjj",
+          job: "打杂的",
+          birthday:"1895年12月",
+          gender:"女",
+          email:"11111@qq.com",
+          phone:"110"
+        }
+      }
+    },
+    methods:{
+      listenInput(e, key){
+        console.log(key)
+        this.information.name=e
       }
     },
     components:{
