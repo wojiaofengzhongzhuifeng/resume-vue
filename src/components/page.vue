@@ -22,13 +22,13 @@
     <main>
       <div class="mainInformation">
         <h1>
-          <editableSpan :informationDetail="information.name" @typeInput="listenInput"></editableSpan>
+          <editableSpan :informationDetail="information.name" @typeInput="listenInput($event,'name')"></editableSpan>
         </h1>
-        <p>应聘职位: <editableSpan :informationDetail="information.job"></editableSpan></p>
-        <p>生日:<editableSpan :informationDetail="information.birthday"></editableSpan>
-          | 性别:<editableSpan :informationDetail="information.gender"></editableSpan>
-          | 邮箱: <editableSpan :informationDetail="information.email"></editableSpan>
-          | 手机号码: <editableSpan :informationDetail="information.phone"></editableSpan>
+        <p>应聘职位: <editableSpan :informationDetail="information.job"  @typeInput="listenInput($event, 'job')"></editableSpan></p>
+        <p>生日:<editableSpan :informationDetail="information.birthday"  @typeInput="listenInput($event, 'birthday')"></editableSpan>
+          | 性别:<editableSpan :informationDetail="information.gender"  @typeInput="listenInput($event, 'gender')"></editableSpan>
+          | 邮箱: <editableSpan :informationDetail="information.email"   @typeInput="listenInput($event, 'email')"></editableSpan>
+          | 手机号码: <editableSpan :informationDetail="information.phone"   @typeInput="listenInput($event, 'phone')"></editableSpan>
         </p>
       </div>
       <div class="skills">
@@ -134,9 +134,8 @@
     },
     methods:{
       listenInput(e, key){
-        console.log(key)
-        this.information.name=e
-      }
+        this.information[key] = e
+      },
     },
     components:{
       editableSpan
