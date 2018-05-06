@@ -16,7 +16,7 @@
         </li>
       </ul>
       <span class="logOut">
-          <button>登出</button>
+          <button @click="onClickLogOut">logOut</button>
       </span>
     </aside>
     <main>
@@ -122,10 +122,11 @@
     <div class="logIn" v-show="showLogIn">
       <h2>logIn</h2>
       <form>
-        <p>email: <input type="text"></p>
-        <p>password: <input type="password"></p>
-        <button>comfirm</button>
+        <p>email: <input type="text" ref="logInEmail"></p>
+        <p>password: <input type="password" ref="logInPassword"></p>
+        <button @click="onClicklogInComfirm">comfirm</button>
       </form>
+      <button @click="onClickRegister">register</button>
     </div>
   </div>
 
@@ -158,7 +159,35 @@
         this.information[key] = e
       },
       onclickSave(){
+        let currentUser = AV.User.current();
+        if(currentUser){
+          //
+          alert("you are already logIN")
+        } else {
+          this.showLogIn = true
+        }
+
+
+      },
+      onClickRegister(){
+        this.showLogIn = false
         this.showRegister = true
+      },
+      onClicklogInComfirm(){
+        let logInEmail = this.$refs.logInEmail.value
+        let logInPassword = this.$refs.logInPassword.value
+        AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
+          this.showLogIn = false
+          this.showRegister = false
+          console.log(loginedUser);
+        }.bind(this), function (error) {
+          console.log("error")
+          alert("userName or password error")
+        });
+      },
+      onClickLogOut(){
+        AV.User.logOut();
+        alert("you are already logOut")
       },
       submitRegister(ee){
         this.showRegister = false
