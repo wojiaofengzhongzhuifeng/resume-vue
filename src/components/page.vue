@@ -3,7 +3,7 @@
     <aside>
       <ul>
         <li class="save">
-          <button>保存</button>
+          <button @click="onclickSave">save</button>
         </li>
         <li class="share">
           <button>分享</button>
@@ -111,15 +111,34 @@
         </ul>
       </div>
     </main>
+    <div class="register" v-show="showRegister" @submit="submitRegister">
+      <h2>register</h2>
+      <form>
+        <p>email: <input type="text" ref="registerEmail"></p>
+        <p>password: <input type="password" ref="registerPassword"></p>
+        <button>comfirm</button>
+      </form>
+    </div>
+    <div class="logIn" v-show="showLogIn">
+      <h2>logIn</h2>
+      <form>
+        <p>email: <input type="text"></p>
+        <p>password: <input type="password"></p>
+        <button>comfirm</button>
+      </form>
+    </div>
   </div>
 
 </template>
 
 <script>
-
+  import AV from "leancloud-storage/dist/av-min"
   import editableSpan from "./editableSpan"
   export default {
     name: 'page',
+    created(){
+      this._initAV()
+    },
     data () {
       return {
         information:{
@@ -129,13 +148,51 @@
           gender:"女",
           email:"11111@qq.com",
           phone:"110"
-        }
+        },
+        showRegister:false,
+        showLogIn:false
       }
     },
     methods:{
       listenInput(e, key){
         this.information[key] = e
       },
+      onclickSave(){
+        this.showRegister = true
+      },
+      submitRegister(ee){
+        this.showRegister = false
+        let registerEmail = this.$refs.registerEmail.value
+        let registerPassword = this.$refs.registerPassword.value
+        // 新建 AVUser 对象实例
+        let user = new AV.User();
+        // 设置用户名
+        user.setUsername(registerEmail);
+        // 设置密码
+        user.setPassword(registerPassword);
+        user.signUp().then(function (loginedUser) {
+          console.log(loginedUser);
+        }, function (error) {
+          console.log("erroe")
+          console.log(error)
+        });
+      },
+      _initAV(){
+        if(AV){
+          console.log("no av")
+          // init leanCloud
+          var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
+          var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
+          AV.init({
+            appId: APP_ID,
+            appKey: APP_KEY
+          });
+        } else {
+          //
+          console.log("have av")
+        }
+
+      }
     },
     components:{
       editableSpan
@@ -167,4 +224,21 @@
     flex-direction: column;
     text-align: center;
   }
+  #app .register{
+    position: fixed;
+    top: 0;
+    left:0;
+    background: grey;
+    width:100%;
+    height:100vh;
+  }
+  #app .logIn{
+    position: fixed;
+    top: 0;
+    left:0;
+    background: grey;
+    width:100%;
+    height:100vh;
+  }
 </style>
+
