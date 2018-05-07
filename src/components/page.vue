@@ -151,7 +151,11 @@
           phone:"110"
         },
         showRegister:false,
-        showLogIn:false
+        showLogIn:false,
+        currentUser:{
+          id:"",
+          userName:""
+        }
       }
     },
     methods:{
@@ -161,8 +165,14 @@
       onclickSave(){
         let currentUser = AV.User.current();
         if(currentUser){
-          //
           alert("you are already logIN")
+          // 第一个参数是 className，第二个参数是 objectId
+          console.log("clickSave")
+          console.log(this.currentUser.id)
+          var user = AV.Object.createWithoutData('User', this.currentUser.id);
+          user.set('information1',this.information);
+          // 保存到云端
+          user.save();
         } else {
           this.showLogIn = true
         }
@@ -179,7 +189,7 @@
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
           this.showLogIn = false
           this.showRegister = false
-          console.log(loginedUser);
+          this.currentUser.id =loginedUser.id
         }.bind(this), function (error) {
           console.log("error")
           alert("userName or password error")
