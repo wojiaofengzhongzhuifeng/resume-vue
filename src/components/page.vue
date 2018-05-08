@@ -13,6 +13,7 @@
         </li>
         <li class="changeSkin">
           <button>换肤</button>
+          {{currentUser}}
         </li>
       </ul>
       <span class="logOut">
@@ -167,8 +168,6 @@
         if(currentUser){
           alert("you are already logIN")
           // 第一个参数是 className，第二个参数是 objectId
-          console.log("clickSave")
-          console.log(this.currentUser.id)
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
           user.set('information1',this.information);
           // 保存到云端
@@ -187,6 +186,8 @@
         let logInEmail = this.$refs.logInEmail.value
         let logInPassword = this.$refs.logInPassword.value
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
+          let information = JSON.parse(loginedUser._hashedJSON.information1)
+          this.information = information
           this.showLogIn = false
           this.showRegister = false
           this.currentUser.id =loginedUser.id
@@ -197,8 +198,11 @@
       },
       onClickLogOut(){
         AV.User.logOut();
+        this.currentUser.id=''
         alert("you are already logOut")
       },
+
+
       submitRegister(ee){
         this.showRegister = false
         let registerEmail = this.$refs.registerEmail.value
