@@ -141,6 +141,19 @@
     created(){
       this._initAV()
     },
+    mounted(){
+      let currentUser = AV.User.current();
+      console.log(currentUser)
+      this.currentUser.id = currentUser.id
+      var query = new AV.Query('User');
+      query.get(this.currentUser.id).then(function (user) {
+        let information1 = JSON.parse(user._hashedJSON.information1)
+        console.log(information1)
+        this.information = information1
+      }.bind(this), function (error) {
+        // 异常处理
+      });
+    },
     data () {
       return {
         information:{
@@ -166,8 +179,7 @@
       onclickSave(){
         let currentUser = AV.User.current();
         if(currentUser){
-          alert("you are already logIN")
-          // 第一个参数是 className，第二个参数是 objectId
+          this.currentUser.id = currentUser.id
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
           user.set('information1',this.information);
           // 保存到云端
@@ -190,7 +202,6 @@
             this.currentUser.id =loginedUser.id
           } else{
             let information1 = JSON.parse(loginedUser._hashedJSON.information1)
-            console.log(information1)
             this.information = information1
             this.currentUser.id =loginedUser.id
           }
