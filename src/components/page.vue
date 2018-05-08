@@ -17,7 +17,7 @@
         </li>
       </ul>
       <span class="logOut">
-          <button @click="onClickLogOut">logOut</button>
+          <button @click="onClickLogOut" v-show="currentUser.id">logOut</button>
       </span>
     </aside>
     <main>
