@@ -117,7 +117,7 @@
       <form>
         <p>email: <input type="text" ref="registerEmail"></p>
         <p>password: <input type="password" ref="registerPassword"></p>
-        <button>comfirm</button>
+        <button @click="onClickRegisterComfirm">comfirm</button>
       </form>
     </div>
     <div class="logIn" v-show="showLogIn">
@@ -186,15 +186,25 @@
         let logInEmail = this.$refs.logInEmail.value
         let logInPassword = this.$refs.logInPassword.value
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
-          let information = JSON.parse(loginedUser._hashedJSON.information1)
-          this.information = information
+          if(!loginedUser._hashedJSON.information1){
+            this.currentUser.id =loginedUser.id
+          } else{
+            let information1 = JSON.parse(loginedUser._hashedJSON.information1)
+            console.log(information1)
+            this.information = information1
+            this.currentUser.id =loginedUser.id
+          }
           this.showLogIn = false
           this.showRegister = false
-          this.currentUser.id =loginedUser.id
+
         }.bind(this), function (error) {
           console.log("error")
           alert("userName or password error")
         });
+      },
+      onClickRegisterComfirm(){
+        this.showLogIn = true
+        this.showRegister = false
       },
       onClickLogOut(){
         AV.User.logOut();
