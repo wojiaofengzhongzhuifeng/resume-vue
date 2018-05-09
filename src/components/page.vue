@@ -157,12 +157,12 @@
     data () {
       return {
         information:{
-          name:"rjj",
-          job: "打杂的",
-          birthday:"1895年12月",
-          gender:"女",
-          email:"11111@qq.com",
-          phone:"110"
+          name:"name",
+          job: "job",
+          birthday:"bir",
+          gender:"gender",
+          email:"email",
+          phone:"phone"
         },
         showRegister:false,
         showLogIn:false,
@@ -183,7 +183,9 @@
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
           user.set('information1',this.information);
           // 保存到云端
-          user.save();
+          user.save().then(()=>{
+            alert("保存成功")
+          });
         } else {
           this.showLogIn = true
         }
@@ -220,6 +222,14 @@
       onClickLogOut(){
         AV.User.logOut();
         this.currentUser.id=''
+        this.information = {
+          name:"name",
+            job: "job",
+            birthday:"bir",
+            gender:"gender",
+            email:"email",
+            phone:"phone"
+        },
         alert("you are already logOut")
       },
 
