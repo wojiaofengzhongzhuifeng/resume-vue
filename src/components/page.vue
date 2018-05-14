@@ -13,7 +13,6 @@
         </li>
         <li class="changeSkin">
           <button>换肤</button>
-          {{currentUser}}
         </li>
       </ul>
       <span class="logOut">
@@ -34,80 +33,29 @@
       </div>
       <div class="skills">
         <h2>技能</h2>
-        {{information}}
-        <ul>
+        <ul v-for="(skill,index) in information.skills">
           <li>
-            <span class="name">静态页面制作</span>
-            <span class="description">完美还原设计稿</span>
-          </li>
-          <li>
-            <span class="name">静态页面制作</span>
-            <span class="description">完美还原设计稿</span>
-          </li>
-          <li>
-            <span class="name">静态页面制作</span>
-            <span class="description">完美还原设计稿</span>
-          </li>
-          <li>
-            <span class="name">静态页面制作</span>
-            <span class="description">完美还原设计稿</span>
+            <span class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></span>
+            <span class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></span>
           </li>
         </ul>
       </div>
 
       <div class="projects">
         <h2>项目经历</h2>
-        <ul>
-          <li>
-            <header>
-              <div class="start">
-                <h3 class="name">我的简历</h3>
-                <span class="link">http://xxxx/xxx</span>
-              </div>
-              <div class="end">
-                <span class="keywords">CSS3、jQuery、响应式</span>
-              </div>
-            </header>
-            <p class="description">我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的</p>
-          </li>
+        <ul v-for="(work, index) in information.works">
 
           <li>
             <header>
               <div class="start">
-                <h3 class="name">我的简历</h3>
-                <span class="link">http://xxxx/xxx</span>
+                <h3 class="name"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
+                <span class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></span>
               </div>
               <div class="end">
-                <span class="keywords">CSS3、jQuery、响应式</span>
+                <span class="keywords"> <editableSpan  :informationDetail="work.needSkills"   @typeInput="listenInput($event, `works.${index}.needSkills`)"></editableSpan></span>
               </div>
             </header>
-            <p class="description">我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的</p>
-          </li>
-
-          <li>
-            <header>
-              <div class="start">
-                <h3 class="name">我的简历</h3>
-                <span class="link">http://xxxx/xxx</span>
-              </div>
-              <div class="end">
-                <span class="keywords">CSS3、jQuery、响应式</span>
-              </div>
-            </header>
-            <p class="description">我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的</p>
-          </li>
-
-          <li>
-            <header>
-              <div class="start">
-                <h3 class="name">我的简历</h3>
-                <span class="link">http://xxxx/xxx</span>
-              </div>
-              <div class="end">
-                <span class="keywords">CSS3、jQuery、响应式</span>
-              </div>
-            </header>
-            <p class="description">我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的</p>
+            <p class="description"> <editableSpan  :informationDetail="work.description"   @typeInput="listenInput($event, `works.${index}.description`)"></editableSpan></p>
           </li>
         </ul>
       </div>
@@ -162,7 +110,33 @@
           birthday:"bir",
           gender:"gender",
           email:"email",
-          phone:"phone"
+          phone:"phone",
+          skills:[
+            {
+              name:"html",
+              description:"还原静态页面"
+            },
+            {
+              name:"css",
+              description:"完成常见动画"
+            },
+            {
+              name:"js",
+              description:"熟悉常见的数据"
+            },
+            {
+              name:"VUe",
+              description:"熟练使用vue"
+            },
+          ],
+          works:[
+            {
+              name:"vue简历",
+              url:"www.baidu.com",
+              needSkills:"js, vue, jQuery",
+              description:"我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的\n"
+            }
+          ]
         },
         showRegister:false,
         showLogIn:false,
@@ -174,7 +148,30 @@
     },
     methods:{
       listenInput(e, key){
-        this.information[key] = e
+        let point = `this.information.${key}`
+        let result = this.information
+        let keys = point.split(".")
+        for (let i = 0; i < keys.length; i++) {
+          if (i === keys.length - 1) {
+            result[keys[i]] = e
+          } else {
+            result = result[keys[i]]
+          }
+        }
+
+        //
+        // console.log(point)
+        // point = point.replace(reg, (matchStr, matchIndex)=>{
+        //   let frontEnd = point.split(matchStr)
+        //   let pointNum = matchIndex - 1
+        //   let middle = point[pointNum] + point[matchIndex]
+        //   middle = middle.slice(1)
+        //   middle = `[${middle}]`
+        //   console.log(middle)
+        //   frontEnd.splice(1, 0, middle)
+        //   frontEnd[0] = frontEnd[0].slice(0, length - 1)
+        //   let frontEndStr = frontEnd.join("")
+        // })
       },
       onclickSave(){
         let currentUser = AV.User.current();
@@ -204,6 +201,8 @@
             this.currentUser.id =loginedUser.id
           } else{
             let information1 = JSON.parse(loginedUser._hashedJSON.information1)
+            console.log("information1")
+            console.log(information1)
             this.information = information1
             this.currentUser.id =loginedUser.id
           }
@@ -224,11 +223,11 @@
         this.currentUser.id=''
         this.information = {
           name:"name",
-            job: "job",
-            birthday:"bir",
-            gender:"gender",
-            email:"email",
-            phone:"phone"
+          job: "job",
+          birthday:"bir",
+          gender:"gender",
+          email:"email",
+          phone:"phone"
         },
         alert("you are already logOut")
       },
