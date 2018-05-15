@@ -20,13 +20,9 @@
             this.edit = true
           },
           changeEditOffAndListenInputValue(e){
-            console.log(1)
             this.edit = false
-            console.log(2)
             let inputValue = e.target.parentNode.querySelector("input").value
-            console.log(3)
             this.$emit("typeInput", inputValue)
-            console.log(4)
           }
         }
     }

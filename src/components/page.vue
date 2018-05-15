@@ -95,9 +95,8 @@
       this.currentUser.id = currentUser.id
       var query = new AV.Query('User');
       query.get(this.currentUser.id).then(function (user) {
-        let information1 = JSON.parse(user._hashedJSON.information1)
-        console.log(information1)
-        this.information = information1
+        let information = JSON.parse(user._hashedJSON.information)
+        this.information = information
       }.bind(this), function (error) {
         // 异常处理
       });
@@ -150,12 +149,20 @@
       listenInput(e, key){
         let point = `this.information.${key}`
         let result = this.information
-        let keys = point.split(".")
+        console.log("point")
+        console.log(point)
+        console.log("result")
+        console.log(result)
+        let keys = point.split(".").slice(2)
+        console.log("keys")
+        console.log(keys)
         for (let i = 0; i < keys.length; i++) {
-          if (i === keys.length - 1) {
-            result[keys[i]] = e
-          } else {
+          if (i !== keys.length - 1) {
+            console.log(2)
             result = result[keys[i]]
+          } else {
+            console.log(1)
+            result[keys[i]] = e
           }
         }
 
@@ -178,7 +185,7 @@
         if(currentUser){
           this.currentUser.id = currentUser.id
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
-          user.set('information1',this.information);
+          user.set('information',this.information);
           // 保存到云端
           user.save().then(()=>{
             alert("保存成功")
@@ -197,13 +204,11 @@
         let logInEmail = this.$refs.logInEmail.value
         let logInPassword = this.$refs.logInPassword.value
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
-          if(!loginedUser._hashedJSON.information1){
+          if(!loginedUser._hashedJSON.information){
             this.currentUser.id =loginedUser.id
           } else{
-            let information1 = JSON.parse(loginedUser._hashedJSON.information1)
-            console.log("information1")
-            console.log(information1)
-            this.information = information1
+            let information = JSON.parse(loginedUser._hashedJSON.information)
+            this.information = information
             this.currentUser.id =loginedUser.id
           }
           this.showLogIn = false
@@ -227,8 +232,34 @@
           birthday:"bir",
           gender:"gender",
           email:"email",
-          phone:"phone"
-        },
+          phone:"phone",
+          skills:[
+            {
+              name:"html",
+              description:"还原静态页面"
+            },
+            {
+              name:"css",
+              description:"完成常见动画"
+            },
+            {
+              name:"js",
+              description:"熟悉常见的数据"
+            },
+            {
+              name:"VUe",
+              description:"熟练使用vue"
+            },
+          ],
+          works:[
+            {
+              name:"vue简历",
+              url:"www.baidu.com",
+              needSkills:"js, vue, jQuery",
+              description:"我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的\n"
+            }
+          ]
+        }
         alert("you are already logOut")
       },
 
