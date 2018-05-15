@@ -21,6 +21,7 @@
     </aside>
     <main>
       <div class="mainInformation">
+        {{this.currentUser}}
         <h1>
           <editableSpan :informationDetail="information.name" @typeInput="listenInput($event,'name')"></editableSpan>
         </h1>
@@ -94,6 +95,8 @@
       console.log(currentUser)
       this.currentUser.id = currentUser.id
       var query = new AV.Query('User');
+      console.log("user")
+      console.log(user)
       query.get(this.currentUser.id).then(function (user) {
         let information = JSON.parse(user._hashedJSON.information)
         this.information = information
@@ -185,7 +188,8 @@
         if(currentUser){
           this.currentUser.id = currentUser.id
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
-          user.set('information',this.information);
+          let StringObject = JSON.stringify(this.information)
+          user.set('information',StringObject);
           // 保存到云端
           user.save().then(()=>{
             alert("保存成功")
@@ -204,10 +208,15 @@
         let logInEmail = this.$refs.logInEmail.value
         let logInPassword = this.$refs.logInPassword.value
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
-          if(!loginedUser._hashedJSON.information){
+          console.log("loginedUser")
+          console.log(loginedUser)
+          if(!loginedUser.attributes.information){
+            console.log(111)
             this.currentUser.id =loginedUser.id
           } else{
-            let information = JSON.parse(loginedUser._hashedJSON.information)
+            let information = JSON.parse(loginedUser.attributes.information)
+            console.log("information")
+            console.log(information)
             this.information = information
             this.currentUser.id =loginedUser.id
           }
