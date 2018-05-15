@@ -34,18 +34,18 @@
       </div>
       <div class="skills">
         <h2>技能</h2>
-        <ul v-for="(skill,index) in information.skills">
-          <li>
+        <ul>
+          <li v-for="(skill,index) in information.skills" class="skill">
             <span class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></span>
             <span class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></span>
           </li>
         </ul>
+        <div class="addSkills" @click="addExtraSkill"> + </div>
       </div>
 
       <div class="projects">
         <h2>项目经历</h2>
         <ul v-for="(work, index) in information.works">
-
           <li>
             <header>
               <div class="start">
@@ -60,6 +60,7 @@
           </li>
         </ul>
       </div>
+      <div class="addWork" @click="addExtraWork"> + </div>
     </main>
     <div class="register" v-show="showRegister" @submit="submitRegister">
       <h2>register</h2>
@@ -200,6 +201,7 @@
 
 
       },
+
       onClickRegister(){
         this.showLogIn = false
         this.showRegister = true
@@ -271,8 +273,22 @@
         }
         alert("you are already logOut")
       },
-
-
+      addExtraSkill(){
+        let skill = {
+            name:"技能名称",
+            description:"技能描述"
+          }
+        this.information.skills.push(skill)
+      },
+      addExtraWork(){
+        let work = {
+          name:"项目名称",
+          url:"预览地址",
+          needSkills:"项目需要技能",
+          description:"项目描述\n"
+        }
+        this.information.works.push(work)
+      },
       submitRegister(ee){
         this.showRegister = false
         let registerEmail = this.$refs.registerEmail.value
