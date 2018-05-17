@@ -97,18 +97,29 @@
       this._initAV()
     },
     mounted(){
-      let currentUser = AV.User.current();
-      this.currentUser.id = currentUser.id
+      // let currentUser = AV.User.current();
+      // this.currentUser.id = currentUser.id
+      // var query = new AV.Query('User');
+      // query.get(this.currentUser.id).then(function (user) {
+      //   let information = JSON.parse(user.attributes.information)
+      //   this.information = information
+      // }.bind(this), function (error) {
+      //   // 异常处理
+      // });
+      // 获得预览链接id
+      let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
+      this.previewUser.id = previewUser
+      console.log("previewUser")
+      console.log(previewUser)
       var query = new AV.Query('User');
-      query.get(this.currentUser.id).then(function (user) {
+      query.get(this.previewUser.id).then(function (user) {
+        console.log(1)
         let information = JSON.parse(user.attributes.information)
+        console.log(information)
         this.information = information
       }.bind(this), function (error) {
         // 异常处理
       });
-      let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
-      this.previewUser = previewUser
-      // http://127.0.0.1:8080/?user_id=5afcf12b7f6fd3188a49971d#/
 
 
     },
@@ -156,7 +167,10 @@
         },
         ifShowShare:false,
         shareUrl:"",
-        previewUser:""
+        previewUser:{
+          id:"",
+          userName:""
+        },
       }
     },
     methods:{
