@@ -196,7 +196,11 @@
       },
       onclickSave(){
         let currentUser = AV.User.current();
-        if(currentUser){
+        if(!currentUser){
+          // 需要登录
+          this.showLogIn = true
+        } else {
+          console.log(321321)
           this.currentUser.id = currentUser.id
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
           let StringObject = JSON.stringify(this.information)
@@ -205,9 +209,8 @@
           user.save().then(()=>{
             alert("保存成功")
           });
-        } else {
-          this.showLogIn = true
         }
+
 
 
       },
@@ -228,6 +231,8 @@
             this.currentUser.id =loginedUser.id
           }
           let shareUrl = location.origin + "?user_id=" + this.currentUser.id
+          console.log("shareUr")
+          console.log(shareUrl)
           this.shareUrl = shareUrl
           this.showLogIn = false
           this.showRegister = false
@@ -321,6 +326,8 @@
           appId: APP_ID,
           appKey: APP_KEY
         });
+
+
       }
     },
     components:{
