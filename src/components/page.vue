@@ -93,13 +93,10 @@
     },
     mounted(){
       let currentUser = AV.User.current();
-      console.log(currentUser)
       this.currentUser.id = currentUser.id
       var query = new AV.Query('User');
-      console.log("user")
-      console.log(user)
       query.get(this.currentUser.id).then(function (user) {
-        let information = JSON.parse(user._hashedJSON.information)
+        let information = JSON.parse(user.attributes.information)
         this.information = information
       }.bind(this), function (error) {
         // 异常处理
@@ -169,20 +166,6 @@
             result[keys[i]] = e
           }
         }
-
-        //
-        // console.log(point)
-        // point = point.replace(reg, (matchStr, matchIndex)=>{
-        //   let frontEnd = point.split(matchStr)
-        //   let pointNum = matchIndex - 1
-        //   let middle = point[pointNum] + point[matchIndex]
-        //   middle = middle.slice(1)
-        //   middle = `[${middle}]`
-        //   console.log(middle)
-        //   frontEnd.splice(1, 0, middle)
-        //   frontEnd[0] = frontEnd[0].slice(0, length - 1)
-        //   let frontEndStr = frontEnd.join("")
-        // })
       },
       onclickSave(){
         let currentUser = AV.User.current();
@@ -210,15 +193,10 @@
         let logInEmail = this.$refs.logInEmail.value
         let logInPassword = this.$refs.logInPassword.value
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
-          console.log("loginedUser")
-          console.log(loginedUser)
           if(!loginedUser.attributes.information){
-            console.log(111)
             this.currentUser.id =loginedUser.id
           } else{
             let information = JSON.parse(loginedUser.attributes.information)
-            console.log("information")
-            console.log(information)
             this.information = information
             this.currentUser.id =loginedUser.id
           }
