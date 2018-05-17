@@ -6,7 +6,7 @@
           <button @click="onclickSave">save</button>
         </li>
         <li class="share">
-          <button>分享</button>
+          <button @click="ifShowShare = !ifShowShare">分享</button>
         </li>
         <li class="print">
           <button>打印</button>
@@ -79,6 +79,11 @@
       </form>
       <button @click="onClickRegister">register</button>
     </div>
+    <div class="shareBoard" v-if="ifShowShare">
+      <h2>分享栏</h2>
+      <p>请将下面链接分享给别人</p>
+      <input type="text" :value="shareUrl">
+    </div>
   </div>
 
 </template>
@@ -143,7 +148,9 @@
         currentUser:{
           id:"",
           userName:""
-        }
+        },
+        ifShowShare:false,
+        shareUrl:""
       }
     },
     methods:{
@@ -200,6 +207,8 @@
             this.information = information
             this.currentUser.id =loginedUser.id
           }
+          let shareUrl = location.origin + "?user_id=" + this.currentUser.id
+          this.shareUrl = shareUrl
           this.showLogIn = false
           this.showRegister = false
 
@@ -346,6 +355,19 @@
     background: grey;
     width:100%;
     height:100vh;
+  }
+
+  .shareBoard {
+    position: fixed;
+    width: 200px;
+    height: 100px;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    box-shadow: 0 0 2px grey;
+    background: grey;
+    text-align: center;
   }
 </style>
 
