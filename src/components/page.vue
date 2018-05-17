@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <aside>
+
+    <aside v-show="previewModel">
       <ul>
         <li class="save">
           <button @click="onclickSave">save</button>
@@ -18,6 +19,10 @@
       <span class="logOut">
           <button @click="onClickLogOut" v-show="currentUser.id">logOut</button>
       </span>
+    </aside>
+
+    <aside v-show="!previewModel">
+      <button>退出预览</button>
     </aside>
     <main>
       <div class="mainInformation">
@@ -84,7 +89,13 @@
       <p>请将下面链接分享给别人</p>
       <input type="text" :value="shareUrl">
     </div>
+
+
   </div>
+
+
+
+
 
 </template>
 
@@ -120,8 +131,16 @@
       }.bind(this), function (error) {
         // 异常处理
       });
+    },
+    computed: {
+      previewModel: function () {
+        if(this.previewUser.id !== "" && this.currentUser.id === ""){
+          return false
+        } else {
+          return true
+        }
 
-
+      }
     },
     data () {
       return {
@@ -195,12 +214,11 @@
         }
       },
       onclickSave(){
-        let currentUser = AV.User.current();
-        if(!currentUser){
+        if(!this.currentUser.id){
           // 需要登录
           this.showLogIn = true
         } else {
-          console.log(321321)
+          let currentUser = AV.User.current();
           this.currentUser.id = currentUser.id
           var user = AV.Object.createWithoutData('User', this.currentUser.id);
           let StringObject = JSON.stringify(this.information)
@@ -236,7 +254,6 @@
           this.shareUrl = shareUrl
           this.showLogIn = false
           this.showRegister = false
-
         }.bind(this), function (error) {
           console.log("error")
           alert("userName or password error")
