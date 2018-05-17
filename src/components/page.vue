@@ -106,6 +106,11 @@
       }.bind(this), function (error) {
         // 异常处理
       });
+      let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
+      this.previewUser = previewUser
+      // http://127.0.0.1:8080/?user_id=5afcf12b7f6fd3188a49971d#/
+
+
     },
     data () {
       return {
@@ -150,7 +155,8 @@
           userName:""
         },
         ifShowShare:false,
-        shareUrl:""
+        shareUrl:"",
+        previewUser:""
       }
     },
     methods:{
@@ -294,20 +300,13 @@
         });
       },
       _initAV(){
-        if(AV){
-          console.log("no av")
-          // init leanCloud
-          var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
-          var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
-          AV.init({
-            appId: APP_ID,
-            appKey: APP_KEY
-          });
-        } else {
-          //
-          console.log("have av")
-        }
 
+        var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
+        var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
+        AV.init({
+          appId: APP_ID,
+          appKey: APP_KEY
+        });
       }
     },
     components:{
