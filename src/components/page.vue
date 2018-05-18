@@ -97,10 +97,10 @@
     <el-dialog title="用户登录" :visible.sync="dialogFormVisible" >
       <el-form >
         <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input auto-complete="off" ref="logInEmail" v-model="logInUser.email"  ></el-input>
+          <el-input auto-complete="off" v-model="logInUser.email"  ></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off" type="password"  ref="logInPassword"  v-model="logInUser.password"></el-input>
+          <el-input auto-complete="off" type="password"   v-model="logInUser.password"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -112,18 +112,18 @@
 
 
 
-    <el-dialog title="用户注册" :visible.sync="dialogFormVisibleRegister"  @submit="submitRegister">
+    <el-dialog title="用户注册" :visible.sync="dialogFormVisibleRegister">
       <el-form :model="form">
         <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input auto-complete="off"   ref="registerEmail"></el-input>
+          <el-input auto-complete="off" v-model="resigterUser.email"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off"  ref="registerPassword" type="password"></el-input>
+          <el-input auto-complete="off"  type="password" v-model="resigterUser.password"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onClickRegisterComfirm">确 定</el-button>
+        <el-button type="primary" @click="onClickResigterComfirm">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -178,11 +178,16 @@
 
       }
     },
+
     data () {
       return {
         dialogFormVisible: false,
         dialogFormVisibleRegister:false,
         logInUser:{
+          email:"",
+          password:""
+        },
+        resigterUser:{
           email:"",
           password:""
         },
@@ -231,8 +236,6 @@
             }
           ]
         },
-        showRegister:false,
-        showLogIn:false,
         currentUser:{
           id:"",
           userName:""
@@ -299,23 +302,18 @@
           if(!loginedUser.attributes.information){
             this.currentUser.id =loginedUser.id
           } else{
-            this.dialogFormVisible = false
             console.log(3)
             let information = JSON.parse(loginedUser.attributes.information)
             this.information = information
             this.currentUser.id =loginedUser.id
           }
+
           console.log(4)
           let shareUrl = location.origin + "?user_id=" + this.currentUser.id
           this.shareUrl = shareUrl
-          this.showLogIn = false
-          this.showRegister = false
+          this.dialogFormVisible = false
         }.bind(this), function (error) {
         });
-      },
-      onClickRegisterComfirm(){
-        this.showLogIn = true
-        this.showRegister = false
       },
       onClickPrint(){
         window.print()
@@ -375,11 +373,12 @@
         }
         this.information.works.push(work)
       },
-      submitRegister(ee){
-        console.log(11111)
-        this.showRegister = false
-        let registerEmail = this.$refs.registerEmail.value
-        let registerPassword = this.$refs.registerPassword.value
+
+
+
+      onClickResigterComfirm(){
+        let registerEmail = this.resigterUser.email
+        let registerPassword = this.resigterUser.password
         // 新建 AVUser 对象实例
         let user = new AV.User();
         // 设置用户名
@@ -387,9 +386,9 @@
         // 设置密码
         user.setPassword(registerPassword);
         user.signUp().then(function (loginedUser) {
-          console.log(loginedUser);
-        }, function (error) {
-          console.log("erroe")
+          this.dialogFormVisibleRegister = false
+          this.dialogFormVisible = true
+        }.bind(this), function (error) {
           console.log(error)
         });
       },
