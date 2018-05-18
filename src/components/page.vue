@@ -95,12 +95,12 @@
 
 
     <el-dialog title="用户登录" :visible.sync="dialogFormVisible" >
-      <el-form :model="form">
+      <el-form >
         <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input auto-complete="off"  ref="logInEmail"></el-input>
+          <el-input auto-complete="off" ref="logInEmail" v-model="logInUser.email"  ></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off"  ref="logInPassword" type="password"></el-input>
+          <el-input auto-complete="off" type="password"  ref="logInPassword"  v-model="logInUser.password"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -182,6 +182,10 @@
       return {
         dialogFormVisible: false,
         dialogFormVisibleRegister:false,
+        logInUser:{
+          email:"",
+          password:""
+        },
         form: {
           name: '',
           region: '',
@@ -289,8 +293,8 @@
         this.dialogFormVisibleRegister = true
       },
       onClicklogInComfirm(){
-        let logInEmail = this.$refs.logInEmail.value
-        let logInPassword = this.$refs.logInPassword.value
+        let logInEmail = this.logInUser.email
+        let logInPassword = this.logInUser.password
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
           if(!loginedUser.attributes.information){
             this.currentUser.id =loginedUser.id
