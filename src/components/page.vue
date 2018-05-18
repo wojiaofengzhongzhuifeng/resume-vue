@@ -26,7 +26,6 @@
 
     <main>
       <div class="mainInformation">
-        {{this.currentUser}}
         <h1>
           <editableSpan :informationDetail="information.name" @typeInput="listenInput($event,'name')"></editableSpan>
         </h1>
@@ -41,33 +40,36 @@
         <h2>技能</h2>
         <ul>
           <li v-for="(skill,index) in information.skills" class="skill">
-            <div class="skill-h3-p-ct">
+            <div class="skill-h3-p-ct" >
+              <i class="el-icon-close" @click="onClickCloseSkill(index)"></i>
               <h3 class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></h3>
               <p class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></p>
             </div>
           </li>
         </ul>
-        <div class="addSkills" @click="addExtraSkill"> + </div>
+        <div class="addSkills" @click="addExtraSkill">
+          <i class="el-icon-circle-plus"></i>
+        </div>
       </div>
 
       <div class="projects">
         <h2>项目经历</h2>
         <ul v-for="(work, index) in information.works">
-          <li>
+          <li class="project">
             <header>
-              <div class="start">
                 <h3 class="name"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
                 <span class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></span>
-              </div>
-              <div class="end">
                 <span class="keywords"> <editableSpan  :informationDetail="work.needSkills"   @typeInput="listenInput($event, `works.${index}.needSkills`)"></editableSpan></span>
-              </div>
             </header>
             <p class="description"> <editableSpan  :informationDetail="work.description"   @typeInput="listenInput($event, `works.${index}.description`)"></editableSpan></p>
           </li>
         </ul>
       </div>
-      <div class="addWork" @click="addExtraWork"> + </div>
+      <div class="addWork" @click="addExtraWork">
+        <div class="addSkills">
+          <i class="el-icon-circle-plus"></i>
+        </div>
+      </div>
     </main>
     <div class="register" v-show="showRegister" @submit="submitRegister">
       <h2>register</h2>
@@ -221,11 +223,13 @@
             alert("保存成功")
           });
         }
-
-
+      },
+      onClickCloseSkill(index){
+        // this.information.skills
+        console.log(index)
+        this.information.skills.splice(index, 1)
 
       },
-
       onClickRegister(){
         this.showLogIn = false
         this.showRegister = true
@@ -249,8 +253,6 @@
           this.showLogIn = false
           this.showRegister = false
         }.bind(this), function (error) {
-
-
         });
       },
       onClickRegisterComfirm(){
@@ -446,19 +448,56 @@
   .skills ul{
     display:flex;
     flex-wrap:wrap;
+    justify-content: space-around;
 
   }
   .skills ul li{
     width:48%;
     height:80px;
     margin:5px;
-    box-shadow: 1px 1px 9px grey;
+    box-shadow: 1px 1px 3px grey;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
+
+  }
+  .skill{
+    position: relative;
+  }
+  .el-icon-close{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+  .addSkills{
+    height: 50px;
+    line-height: 50px;
+    box-shadow: 0 1px 5px grey;
+    width: 99%;
+    margin-top: 5px;
+    text-align: center;
   }
 
 
+  .projects{
+    text-align: center;
+  }
+  .project{
+    box-shadow: 1px 1px 3px grey;
+    border-radius: 5px;
+    margin:5px 0;
+    padding:5px;
+  }
+  .project header{
+    display: flex;
+    justify-content:space-between;
+    height: 46px;
+    line-height: 46px;
+  }
+  .project .start{
+    display:flex;
+  }
+  .project .end{}
 </style>
 
