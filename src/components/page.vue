@@ -2,23 +2,26 @@
   <div id="app">
 
     <aside v-show="previewModel">
+      <div class="userInformation">
+          <div class="img-ct">
+            <img
+              src="http://upload-images.jianshu.io/upload_images/5529438-af8ac43908596335.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
+              alt="" width="50" height="50">
+          </div>
+          <p>userName</p>
+      </div>
       <ul>
         <li class="save">
-          <button @click="onclickSave">save</button>
+          <el-button type="primary" @click="onclickSave">保存</el-button>
         </li>
         <li class="share">
-          <button @click="ifShowShare = !ifShowShare">分享</button>
+          <el-button type="primary" @click="ifShowShare = !ifShowShare">分享</el-button>
         </li>
         <li class="print">
-          <button @click="onClickPrint">打印</button>
-        </li>
-        <li class="changeSkin">
-          <button>换肤</button>
+          <el-button type="primary" @click="onClickPrint">打印</el-button>
         </li>
       </ul>
-      <span class="logOut">
-          <button @click="onClickLogOut" v-show="currentUser.id">logOut</button>
-      </span>
+      <el-button type="danger" @click="onClickLogOut" v-show="currentUser.id">登出</el-button>
     </aside>
 
     <main>
@@ -359,9 +362,10 @@
     display:flex;
   }
   aside{
-    width:100px;
+    width:200px;
     position: relative;
-    height:100vh
+    height:100vh;
+    text-align:center;
   }
   main{
     flex:1;
@@ -407,5 +411,29 @@
       display:none;
     }
   }
+
+  .img-ct{
+    border-radius:50%;
+
+    margin-top:50px;
+  }
+
+  .el-button--primary {
+    color: #fff;
+    background-color: #409EFF;
+    border-color: #409EFF;
+    width: 100px;
+    height: 50px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .el-button--danger {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    bottom: 20px;
+    left: 50px;
+  }
+
 </style>
 
