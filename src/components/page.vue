@@ -41,8 +41,10 @@
         <h2>技能</h2>
         <ul>
           <li v-for="(skill,index) in information.skills" class="skill">
-            <span class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></span>
-            <span class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></span>
+            <div class="skill-h3-p-ct">
+              <h3 class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></h3>
+              <p class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></p>
+            </div>
           </li>
         </ul>
         <div class="addSkills" @click="addExtraSkill"> + </div>
@@ -434,6 +436,29 @@
     bottom: 20px;
     left: 50px;
   }
+
+
+
+  .skills{
+    text-align: center;
+
+  }
+  .skills ul{
+    display:flex;
+    flex-wrap:wrap;
+
+  }
+  .skills ul li{
+    width:48%;
+    height:80px;
+    margin:5px;
+    box-shadow: 1px 1px 9px grey;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 
 </style>
 
