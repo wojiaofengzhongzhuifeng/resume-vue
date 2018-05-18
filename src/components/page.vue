@@ -10,7 +10,7 @@
           <button @click="ifShowShare = !ifShowShare">分享</button>
         </li>
         <li class="print">
-          <button>打印</button>
+          <button @click="onClickPrint">打印</button>
         </li>
         <li class="changeSkin">
           <button>换肤</button>
@@ -21,9 +21,6 @@
       </span>
     </aside>
 
-    <aside v-show="!previewModel">
-      <button>退出预览</button>
-    </aside>
     <main>
       <div class="mainInformation">
         {{this.currentUser}}
@@ -105,32 +102,23 @@
   export default {
     name: 'page',
     created(){
+
       this._initAV()
     },
     mounted(){
-      // let currentUser = AV.User.current();
-      // this.currentUser.id = currentUser.id
-      // var query = new AV.Query('User');
-      // query.get(this.currentUser.id).then(function (user) {
-      //   let information = JSON.parse(user.attributes.information)
-      //   this.information = information
-      // }.bind(this), function (error) {
-      //   // 异常处理
-      // });
-      // 获得预览链接id
       let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
       this.previewUser.id = previewUser
-      console.log("previewUser")
-      console.log(previewUser)
       var query = new AV.Query('User');
-      query.get(this.previewUser.id).then(function (user) {
-        console.log(1)
-        let information = JSON.parse(user.attributes.information)
-        console.log(information)
-        this.information = information
-      }.bind(this), function (error) {
-        // 异常处理
-      });
+      if(!previewUser){
+        // 不做任何事情
+      } else{
+        query.get(this.previewUser.id).then(function (user) {  // bug
+          let information = JSON.parse(user.attributes.information)
+          this.information = information
+        }.bind(this), function (error) {
+          // 异常处理
+        });
+      }
     },
     computed: {
       previewModel: function () {
@@ -194,24 +182,24 @@
     },
     methods:{
       listenInput(e, key){
-        let point = `this.information.${key}`
-        let result = this.information
-        console.log("point")
-        console.log(point)
-        console.log("result")
-        console.log(result)
-        let keys = point.split(".").slice(2)
-        console.log("keys")
-        console.log(keys)
-        for (let i = 0; i < keys.length; i++) {
-          if (i !== keys.length - 1) {
-            console.log(2)
-            result = result[keys[i]]
-          } else {
-            console.log(1)
-            result[keys[i]] = e
+        if(this.currentUser.id === "" & this.previewUser !== ""){
+          // 预览模式
+          this.showLogIn = true
+        } else {
+          let point = `this.information.${key}`
+          let result = this.information
+          let keys = point.split(".").slice(2)
+          for (let i = 0; i < keys.length; i++) {
+            if (i !== keys.length - 1) {
+              console.log(2)
+              result = result[keys[i]]
+            } else {
+              console.log(1)
+              result[keys[i]] = e
+            }
           }
         }
+
       },
       onclickSave(){
         if(!this.currentUser.id){
@@ -243,25 +231,29 @@
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
           if(!loginedUser.attributes.information){
             this.currentUser.id =loginedUser.id
+            console.log(2)
           } else{
+            console.log(3)
             let information = JSON.parse(loginedUser.attributes.information)
             this.information = information
             this.currentUser.id =loginedUser.id
           }
+          console.log(4)
           let shareUrl = location.origin + "?user_id=" + this.currentUser.id
-          console.log("shareUr")
-          console.log(shareUrl)
           this.shareUrl = shareUrl
           this.showLogIn = false
           this.showRegister = false
         }.bind(this), function (error) {
-          console.log("error")
-          alert("userName or password error")
+
+
         });
       },
       onClickRegisterComfirm(){
         this.showLogIn = true
         this.showRegister = false
+      },
+      onClickPrint(){
+        window.print()
       },
       onClickLogOut(){
         AV.User.logOut();
@@ -337,6 +329,8 @@
       },
       _initAV(){
 
+
+
         var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
         var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
         AV.init({
@@ -405,6 +399,13 @@
     box-shadow: 0 0 2px grey;
     background: grey;
     text-align: center;
+  }
+
+
+  @media print {
+    aside{
+      display:none;
+    }
   }
 </style>
 
