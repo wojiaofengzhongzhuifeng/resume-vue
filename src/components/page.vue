@@ -15,7 +15,7 @@
           <el-button type="primary" @click="onclickSave">保存</el-button>
         </li>
         <li class="share">
-          <el-button type="primary" @click="ifShowShare = !ifShowShare">分享</el-button>
+          <el-button type="primary" @click="dialogVisible = true">分享</el-button>
         </li>
         <li class="print">
           <el-button type="primary" @click="onClickPrint">打印</el-button>
@@ -129,11 +129,18 @@
 
 
 
-    <div class="shareBoard" v-if="ifShowShare">
-      <h2>分享栏</h2>
-      <p>请将下面链接分享给别人</p>
-      <input type="text" :value="shareUrl">
-    </div>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <p>{{shareUrl}}</p>
+      <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
 
 
   </div>
@@ -183,6 +190,7 @@
       return {
         dialogFormVisible: false,
         dialogFormVisibleRegister:false,
+        dialogVisible:false,
         logInUser:{
           email:"",
           password:""
