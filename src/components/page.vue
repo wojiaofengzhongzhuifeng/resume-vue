@@ -25,6 +25,7 @@
     </aside>
 
     <main>
+      {{currentUser}}
       <div class="mainInformation">
         <h1>
           <editableSpan :informationDetail="information.name" @typeInput="listenInput($event,'name')"></editableSpan>
@@ -71,23 +72,63 @@
         </div>
       </div>
     </main>
-    <div class="register" v-show="showRegister" @submit="submitRegister">
-      <h2>register</h2>
-      <form>
-        <p>email: <input type="text" ref="registerEmail"></p>
-        <p>password: <input type="password" ref="registerPassword"></p>
-        <button @click="onClickRegisterComfirm">comfirm</button>
-      </form>
-    </div>
-    <div class="logIn" v-show="showLogIn">
-      <h2>logIn</h2>
-      <form>
-        <p>email: <input type="text" ref="logInEmail"></p>
-        <p>password: <input type="password" ref="logInPassword"></p>
-        <button @click="onClicklogInComfirm">comfirm</button>
-      </form>
-      <button @click="onClickRegister">register</button>
-    </div>
+    <!--<div class="register" v-show="showRegister" @submit="submitRegister">-->
+      <!--<h2>register</h2>-->
+      <!--<form>-->
+        <!--<p>email: <input type="text" ref="registerEmail"></p>-->
+        <!--<p>password: <input type="password" ref="registerPassword"></p>-->
+        <!--<button @click="onClickRegisterComfirm">comfirm</button>-->
+      <!--</form>-->
+    <!--</div>-->
+
+
+
+    <!--<div class="logIn" v-show="showLogIn">-->
+      <!--<h2>logIn</h2>-->
+      <!--<form>-->
+        <!--<p>email: <input type="text" ref="logInEmail"></p>-->
+        <!--<p>password: <input type="password" ref="logInPassword"></p>-->
+        <!--<button @click="onClicklogInComfirm">comfirm</button>-->
+      <!--</form>-->
+      <!--<button @click="onClickRegister">register</button>-->
+    <!--</div>-->
+
+
+    <el-dialog title="用户登录" :visible.sync="dialogFormVisible" >
+      <el-form :model="form">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input auto-complete="off"  ref="logInEmail"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input auto-complete="off"  ref="logInPassword" type="password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="success" @click="onClickRegister">注 册</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onClicklogInComfirm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+
+    <el-dialog title="用户注册" :visible.sync="dialogFormVisibleRegister"  @submit="submitRegister">
+      <el-form :model="form">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input auto-complete="off"   ref="registerEmail"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input auto-complete="off"  ref="registerPassword" type="password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onClickRegisterComfirm">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+
     <div class="shareBoard" v-if="ifShowShare">
       <h2>分享栏</h2>
       <p>请将下面链接分享给别人</p>
@@ -139,6 +180,19 @@
     },
     data () {
       return {
+        dialogFormVisible: false,
+        dialogFormVisibleRegister:false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '100px',
         information:{
           name:"name",
           job: "job",
@@ -191,7 +245,7 @@
       listenInput(e, key){
         if(this.currentUser.id === "" & this.previewUser !== ""){
           // 预览模式
-          this.showLogIn = true
+          this.dialogFormVisible = true
         } else {
           let point = `this.information.${key}`
           let result = this.information
@@ -211,7 +265,7 @@
       onclickSave(){
         if(!this.currentUser.id){
           // 需要登录
-          this.showLogIn = true
+          this.dialogFormVisible = true
         } else {
           let currentUser = AV.User.current();
           this.currentUser.id = currentUser.id
@@ -231,8 +285,8 @@
 
       },
       onClickRegister(){
-        this.showLogIn = false
-        this.showRegister = true
+        this.dialogFormVisible = false
+        this.dialogFormVisibleRegister = true
       },
       onClicklogInComfirm(){
         let logInEmail = this.$refs.logInEmail.value
@@ -240,8 +294,8 @@
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
           if(!loginedUser.attributes.information){
             this.currentUser.id =loginedUser.id
-            console.log(2)
           } else{
+            this.dialogFormVisible = false
             console.log(3)
             let information = JSON.parse(loginedUser.attributes.information)
             this.information = information
@@ -318,6 +372,7 @@
         this.information.works.push(work)
       },
       submitRegister(ee){
+        console.log(11111)
         this.showRegister = false
         let registerEmail = this.$refs.registerEmail.value
         let registerPassword = this.$refs.registerPassword.value
