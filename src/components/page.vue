@@ -57,8 +57,9 @@
         <h2>项目经历</h2>
         <ul v-for="(work, index) in information.works">
           <li class="project">
+            <i class="el-icon-close projectLi" @click="onClickCloseProject(index)"></i>
             <header>
-                <h3 class="name"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
+              <h3 class="projectName"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
                 <span class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></span>
                 <span class="keywords"> <editableSpan  :informationDetail="work.needSkills"   @typeInput="listenInput($event, `works.${index}.needSkills`)"></editableSpan></span>
             </header>
@@ -72,26 +73,6 @@
         </div>
       </div>
     </main>
-    <!--<div class="register" v-show="showRegister" @submit="submitRegister">-->
-      <!--<h2>register</h2>-->
-      <!--<form>-->
-        <!--<p>email: <input type="text" ref="registerEmail"></p>-->
-        <!--<p>password: <input type="password" ref="registerPassword"></p>-->
-        <!--<button @click="onClickRegisterComfirm">comfirm</button>-->
-      <!--</form>-->
-    <!--</div>-->
-
-
-
-    <!--<div class="logIn" v-show="showLogIn">-->
-      <!--<h2>logIn</h2>-->
-      <!--<form>-->
-        <!--<p>email: <input type="text" ref="logInEmail"></p>-->
-        <!--<p>password: <input type="password" ref="logInPassword"></p>-->
-        <!--<button @click="onClicklogInComfirm">comfirm</button>-->
-      <!--</form>-->
-      <!--<button @click="onClickRegister">register</button>-->
-    <!--</div>-->
 
 
     <el-dialog title="用户登录" :visible.sync="dialogFormVisible" >
@@ -133,8 +114,7 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose">
+      width="30%">
       <p>{{shareUrl}}</p>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">取 消</el-button>
@@ -297,7 +277,11 @@
         // this.information.skills
         console.log(index)
         this.information.skills.splice(index, 1)
-
+      },
+      onClickCloseProject(index){
+        // this.information.skills
+        console.log(index)
+        this.information.works.splice(index, 1)
       },
       onClickRegister(){
         this.dialogFormVisible = false
@@ -549,6 +533,9 @@
   .projects{
     text-align: center;
   }
+  .projects>ul{
+    position: relative;
+  }
   .project{
     box-shadow: 1px 1px 3px grey;
     border-radius: 5px;
@@ -564,6 +551,14 @@
   .project .start{
     display:flex;
   }
-  .project .end{}
+  h3.projectName, span.link,span.keywords{
+    text-align: left;
+    width:33%
+  }
+  .el-icon-close.projectLi{
+    position: absolute;
+    top:6px;
+  }
+
 </style>
 
