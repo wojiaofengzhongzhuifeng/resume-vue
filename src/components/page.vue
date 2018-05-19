@@ -25,7 +25,6 @@
     </aside>
 
     <main>
-      {{currentUser}}
       <div class="mainInformation">
         <h1>
           <editableSpan :informationDetail="information.name" @typeInput="listenInput($event,'name')"></editableSpan>
@@ -42,13 +41,13 @@
         <ul>
           <li v-for="(skill,index) in information.skills" class="skill">
             <div class="skill-h3-p-ct" >
-              <i class="el-icon-close" @click="onClickCloseSkill(index)"></i>
+              <i class="el-icon-close" @click="onClickCloseSkill(index)"  v-show="previewModel"></i>
               <h3 class="name"> <editableSpan  :informationDetail="skill.name"   @typeInput="listenInput($event, `skills.${index}.name`)"></editableSpan></h3>
               <p class="description"><editableSpan   :informationDetail="skill.description"  @typeInput="listenInput($event, `skills.${index}.description`)"></editableSpan></p>
             </div>
           </li>
         </ul>
-        <div class="addSkills" @click="addExtraSkill">
+        <div class="addSkills" @click="addExtraSkill"  v-show="previewModel">
           <i class="el-icon-circle-plus"></i>
         </div>
       </div>
@@ -57,7 +56,7 @@
         <h2>项目经历</h2>
         <ul v-for="(work, index) in information.works">
           <li class="project">
-            <i class="el-icon-close projectLi" @click="onClickCloseProject(index)"></i>
+            <i class="el-icon-close projectLi" @click="onClickCloseProject(index)"  v-show="previewModel"></i>
             <header>
               <h3 class="projectName"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
                 <span class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></span>
@@ -68,8 +67,8 @@
         </ul>
       </div>
       <div class="addWork" @click="addExtraWork">
-        <div class="addSkills">
-          <i class="el-icon-circle-plus"></i>
+        <div class="addSkills" v-show="previewModel">
+          <i class="el-icon-circle-plus" ></i>
         </div>
       </div>
     </main>
@@ -84,9 +83,6 @@
           <el-input auto-complete="off" type="password"   v-model="logInUser.password"></el-input>
         </el-form-item>
       </el-form>
-
-      {{this.dialogFormVisible}}
-      {{this.showErrorInformation}}
       <div slot="footer" class="dialog-footer">
         <el-button type="success" @click="onClickRegister">注 册</el-button>
         <el-button class="cancel" @click="dialogFormVisible = false">取 消</el-button>
@@ -384,7 +380,7 @@
           this.dialogFormVisible = true
         }.bind(this), function (error) {
           console.log(error)
-          this.showErrorInformation = true
+
         });
       },
       _initAV(){
@@ -432,6 +428,11 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    margin-bottom: 20px;
+    margin: 20px 0;
+    /* box-shadow: 1px 1px 3px grey; */
+    padding: 20px 0;
+    box-shadow: 1px 1px 3px grey;
   }
   #app .register{
     position: fixed;
@@ -467,6 +468,12 @@
   @media print {
     aside{
       display:none;
+    }
+    .el-icon-close{
+      display: none;
+    }
+    .addSkills{
+      display: none;
     }
   }
 
@@ -528,7 +535,6 @@
     height: 50px;
     line-height: 50px;
     box-shadow: 0 1px 5px grey;
-    width: 99%;
     margin-top: 5px;
     text-align: center;
   }
