@@ -75,7 +75,7 @@
     </main>
 
 
-    <el-dialog title="用户登录" :visible.sync="dialogFormVisible" >
+    <el-dialog title="用户登录" :visible.sync="dialogFormVisible">
       <el-form >
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input auto-complete="off" v-model="logInUser.email"  ></el-input>
@@ -84,9 +84,12 @@
           <el-input auto-complete="off" type="password"   v-model="logInUser.password"></el-input>
         </el-form-item>
       </el-form>
+
+      {{this.dialogFormVisible}}
+      {{this.showErrorInformation}}
       <div slot="footer" class="dialog-footer">
         <el-button type="success" @click="onClickRegister">注 册</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button class="cancel" @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="onClicklogInComfirm">确 定</el-button>
       </div>
     </el-dialog>
@@ -103,7 +106,6 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="onClickResigterComfirm">确 定</el-button>
       </div>
     </el-dialog>
@@ -162,8 +164,7 @@
         } else {
           return true
         }
-
-      }
+      },
     },
 
     data () {
@@ -305,7 +306,8 @@
           this.shareUrl = shareUrl
           this.dialogFormVisible = false
         }.bind(this), function (error) {
-        });
+          alert("账号或者密码错误")
+        }.bind(this));
       },
       onClickPrint(){
         window.print()
@@ -382,6 +384,7 @@
           this.dialogFormVisible = true
         }.bind(this), function (error) {
           console.log(error)
+          this.showErrorInformation = true
         });
       },
       _initAV(){
@@ -411,6 +414,7 @@
   *{
     margin: 0;
     padding:0;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   }
   #app{
     display:flex;
@@ -482,7 +486,7 @@
     margin: 20px 0;
   }
   .el-button--danger {
-    position: absolute;
+    position: fixed;
     width: 100px;
     height: 50px;
     bottom: 20px;
@@ -560,5 +564,31 @@
     top:6px;
   }
 
+  .cancel{
+    color: #606266;
+    width: 100px;
+    height: 50px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+  }
+
+
+  .el-button--success {
+    width: 100px;
+    height: 50px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #fff;
+    background-color: #67c23a;
+    border-color: #67c23a;
+  }
+  .errorInformation{
+    text-align: right;
+    padding-top: 10px;
+    color: #f56c6c;
+    font-size: 16px;
+  }
 </style>
 
