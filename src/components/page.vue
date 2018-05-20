@@ -3,12 +3,9 @@
 
     <aside v-show="previewModel">
       <div class="userInformation">
-          <div class="img-ct">
-            <img
-              src="http://upload-images.jianshu.io/upload_images/5529438-af8ac43908596335.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"
-              alt="" width="50" height="50">
+          <div ref="imgCt" class="imgCt">
           </div>
-          <p>userName</p>
+          <p>{{logInUser.email}}</p>
       </div>
       <ul>
         <li class="save">
@@ -132,10 +129,10 @@
 <script>
   import AV from "leancloud-storage/dist/av-min"
   import editableSpan from "./editableSpan"
+  import Identicon from "../../node_modules/identicon.js/identicon.js"
   export default {
     name: 'page',
     created(){
-
       this._initAV()
     },
     mounted(){
@@ -219,7 +216,8 @@
               needSkills:"js, vue, jQuery",
               description:"我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的我是怎么做这个项目的\n"
             }
-          ]
+          ],
+          avatarNumber:""
         },
         currentUser:{
           id:"",
@@ -297,10 +295,10 @@
             this.currentUser.id =loginedUser.id
           }
 
-          console.log(4)
           let shareUrl = location.origin + "?user_id=" + this.currentUser.id
           this.shareUrl = shareUrl
           this.dialogFormVisible = false
+          this.createAvatar(this.currentUser.id)
         }.bind(this), function (error) {
           alert("账号或者密码错误")
         }.bind(this));
@@ -378,23 +376,26 @@
         user.signUp().then(function (loginedUser) {
           this.dialogFormVisibleRegister = false
           this.dialogFormVisible = true
+          // 保存到云端
+
+
         }.bind(this), function (error) {
           console.log(error)
-
         });
       },
       _initAV(){
-
-
-
         var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
         var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
         AV.init({
           appId: APP_ID,
           appKey: APP_KEY
         });
-
-
+      },
+      createAvatar(hash){
+        var data = new Identicon(hash, 50).toString();
+        var objE = document.createElement("div");
+        objE.innerHTML = '<img width=50 height=50 src="data:image/png;base64,' + data + '">'
+        this.$refs.imgCt.appendChild(objE)
       }
     },
     components:{
@@ -428,7 +429,6 @@
     display: flex;
     flex-direction: column;
     text-align: center;
-    margin-bottom: 20px;
     margin: 20px 0;
     /* box-shadow: 1px 1px 3px grey; */
     padding: 20px 0;
@@ -497,7 +497,7 @@
     width: 100px;
     height: 50px;
     bottom: 20px;
-    left: 50px;
+    left: 60px;
   }
 
 
@@ -595,6 +595,9 @@
     padding-top: 10px;
     color: #f56c6c;
     font-size: 16px;
+  }
+  .imgCt{
+    padding-top:20px;
   }
 </style>
 
