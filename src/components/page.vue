@@ -17,6 +17,11 @@
         <li class="print">
           <el-button type="primary" @click="onClickPrint">打印</el-button>
         </li>
+
+        <li class="message" v-show="this.currentUser.id">
+          <el-button type="primary" @click="dialogMessage=true">消息</el-button>
+          <span class="number">{{this.allUserHrInformationArr.length}}</span>
+        </li>
       </ul>
       <el-button type="danger" @click="onClickLogOut" v-show="currentUser.id">登出</el-button>
     </aside>
@@ -118,7 +123,13 @@
     </el-dialog>
 
 
-
+    <el-dialog title="用户消息" :visible.sync="dialogMessage">
+      <ul>
+        <li v-for="message in allUserHrInformationArr">
+          <span>{{message.email}}</span> : <span>{{message.message}}</span>
+        </li>
+      </ul>
+    </el-dialog>
 
     <el-dialog
       title="提示"
@@ -190,6 +201,7 @@
         dialogFormVisible: false,
         dialogFormVisibleRegister:false,
         dialogVisible:false,
+        dialogMessage:false,
         hrInformation:{
           email:"",
           message:""
@@ -259,6 +271,8 @@
           id:"",
           userName:""
         },
+        allUserHrInformation:[],
+        allUserHrInformationArr:[]
       }
     },
     methods:{
@@ -347,24 +361,12 @@
           this.dialogFormVisible = false
           this.createAvatar(this.currentUser.id)
 
-          // 载入hr的信息
-          // var todo = AV.Object.createWithoutData('userAndHrContact', "5b01905efb4ffe005d6775e4")
-          // todo.fetch().then(function () {
-          //   var userId = todo.get('userId');// 读取 title
-          //   console.log(userId)
-          //   var hrInformation = todo.get("hrInformation")
-          //   console.log(hrInformation)
-          // }, function (error) {
-          //   // 异常处理
-          // });
+          let _this = this
 
           var query = new AV.Query('userAndHrContact');
           query.find().then(function (todos) {
-
-
-            console.log(todos)
-
             let obj = {}
+            let obj1 = {}
             for(let i=0;i<todos.length;i++){
               let userId = todos[i].attributes.userId
               let information = todos[i].attributes.hrInformation
@@ -375,21 +377,33 @@
                 obj[userId].push(information)
               }
             }
-            console.log(obj)
+
+            for(let key in obj){
+              if(key === _this.currentUser.id){
+                _this.allUserHrInformation = obj[key]
+              }
+            }
+            console.log("_this.allUserHrInformation")
+            console.log(_this.allUserHrInformation)
 
 
-          }).then(function(todos) {
-            // 更新成功
-          }, function (error) {
-            // 异常处理
-          });
+            let arr = []
+            // 将每项3message由json变成对象
+            for(let i=0;i<_this.allUserHrInformation.length;i++){
+              console.log(1)
+              console.log(JSON.parse(_this.allUserHrInformation[i]))
+              arr.push(JSON.parse(_this.allUserHrInformation[i]))
+              console.log(arr)
+              _this.allUserHrInformationArr = arr
+            }
 
 
 
+          })
 
         }.bind(this), function (error) {
           alert("账号或者密码错误")
-        }.bind(this));
+        });
       },
       onClickPrint(){
         window.print()
@@ -714,6 +728,21 @@
     background:#67c23a;
     box-shadow: 0 0 1px darkslategrey;
     text-align: center;
+  }
+
+
+
+  .message{
+    position: relative;
+  }
+  .number{
+    position:absolute;
+    top: 17px;
+    right: 48px;
+    background: red;
+    color: white;
+    width: 20px;
+    border-radius: 50%;
   }
 </style>
 
