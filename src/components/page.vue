@@ -263,31 +263,20 @@
     },
     methods:{
       saveHrInformation(e){
-        console.log(e)
 
-        var query = new AV.Query('_User');
-        query.get('5b00ee0317d009726f213c88').then(function (todo) {
-          // 成功获得实例
-          // todo 就是 id 为 57328ca079bc44005c2472d0 的 Todo 对象实例
-          console.log(todo)
+        let previewUserId = this.previewUser.id
+
+
+        var Information = AV.Object.extend('userAndHrContact');
+        var information = new Information();
+        information.set('userId',previewUserId);
+        information.set('hrInformation',JSON.stringify(this.hrInformation));
+        information.save().then(function (todo) {
+          console.log('objectId is ' + todo.id);
+          alert("成功向应聘者提交你的信息")
         }, function (error) {
-          // 异常处理
+          console.error(error);
         });
-
-
-
-        //
-        //
-        // // 保存hr的信息
-        // var user = AV.Object.createWithoutData('User', this.previewUser.id);
-        // let StringObject = JSON.stringify(this.hrInformation)
-        // user.set('hrInformation', StringObject);
-        // user.save().then(()=>{
-        //   alert("提交参观")
-        // }, function(error){
-        //   console.log(error)
-        // });
-
 
       },
       listenInput(e, key){
