@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" ref="xxxxx">
 
     <aside v-show="previewModel">
       <div class="userInformation">
@@ -66,6 +66,17 @@
       <div class="addWork" @click="addExtraWork">
         <div class="addSkills" v-show="previewModel">
           <i class="el-icon-circle-plus" ></i>
+        </div>
+      </div>
+
+
+      <div class="contact-ct" v-show="!previewModel">
+        <div class="contact">
+          <h4>请联系我!</h4>
+          <p>回车即可提交</p>
+          <el-input placeholder="请输入联系方式" v-model="hrInformation.email"></el-input>
+          <el-input placeholder="请输入内容" v-model="hrInformation.message" @keyup.enter.native="saveHrInformation"></el-input>
+
         </div>
       </div>
     </main>
@@ -152,12 +163,16 @@
           // 异常处理
         });
       }
+
+
     },
     computed: {
       previewModel: function () {
         if(this.previewUser.id !== "" && this.currentUser.id === ""){
+          // 预览模式
           return false
         } else {
+          // 编辑模式
           return true
         }
       },
@@ -175,6 +190,10 @@
         dialogFormVisible: false,
         dialogFormVisibleRegister:false,
         dialogVisible:false,
+        hrInformation:{
+          email:"",
+          message:""
+        },
         logInUser:{
           email:"",
           password:""
@@ -243,6 +262,34 @@
       }
     },
     methods:{
+      saveHrInformation(e){
+        console.log(e)
+
+        var query = new AV.Query('_User');
+        query.get('5b00ee0317d009726f213c88').then(function (todo) {
+          // 成功获得实例
+          // todo 就是 id 为 57328ca079bc44005c2472d0 的 Todo 对象实例
+          console.log(todo)
+        }, function (error) {
+          // 异常处理
+        });
+
+
+
+        //
+        //
+        // // 保存hr的信息
+        // var user = AV.Object.createWithoutData('User', this.previewUser.id);
+        // let StringObject = JSON.stringify(this.hrInformation)
+        // user.set('hrInformation', StringObject);
+        // user.save().then(()=>{
+        //   alert("提交参观")
+        // }, function(error){
+        //   console.log(error)
+        // });
+
+
+      },
       listenInput(e, key){
         if(this.currentUser.id === "" & this.previewUser !== ""){
           // 预览模式
@@ -419,6 +466,10 @@
           // 不做任何事情
         }
 
+      },
+      ContactMe(e){
+        console.log(1)
+        console.log(e)
       }
     },
     components:{
@@ -621,6 +672,18 @@
   }
   .imgCt{
     padding-top:20px;
+  }
+  .contact-ct{
+    display: flex;
+    justify-content: center;
+
+    color: #fff;
+    padding-top:10px
+  }
+  .contact{
+    background:#67c23a;
+    box-shadow: 0 0 1px darkslategrey;
+    text-align: center;
   }
 </style>
 
