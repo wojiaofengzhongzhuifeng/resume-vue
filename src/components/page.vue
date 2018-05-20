@@ -3,9 +3,9 @@
 
     <aside v-show="previewModel">
       <div class="userInformation">
-          <div ref="imgCt" class="imgCt">
+          <div ref="imgCt" class="imgCt" v-show="showLogInUser">
           </div>
-          <p>{{logInUser.email}}</p>
+          <p v-show="showLogInUser">{{logInUser.email}}</p>
       </div>
       <ul>
         <li class="save">
@@ -158,6 +158,13 @@
           return true
         }
       },
+      showLogInUser:function(){
+        if(this.currentUser.id === ""){
+          return false
+        } else {
+          return true
+        }
+      }
     },
 
     data () {
@@ -395,7 +402,12 @@
         var data = new Identicon(hash, 50).toString();
         var objE = document.createElement("div");
         objE.innerHTML = '<img width=50 height=50 src="data:image/png;base64,' + data + '">'
-        this.$refs.imgCt.appendChild(objE)
+        if(this.$refs.imgCt.querySelector("div") === null){
+          this.$refs.imgCt.appendChild(objE)
+        } else {
+          // 不做任何事情
+        }
+
       }
     },
     components:{
