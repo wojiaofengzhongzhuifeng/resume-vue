@@ -95,7 +95,10 @@
           <el-input auto-complete="off" v-model="resigterUser.email"></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off"  type="password" v-model="resigterUser.password"></el-input>
+          <el-input auto-complete="off"  type="password" v-model="resigterUser.password" ref="registerPassword"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" :label-width="formLabelWidth">
+          <el-input auto-complete="off"  type="password" v-model="resigterUser.comfirmPassword"  ref="registerPasswordComfirm"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,7 +181,8 @@
         },
         resigterUser:{
           email:"",
-          password:""
+          password:"",
+          comfirmPassword:""
         },
         form: {
           name: '',
@@ -372,23 +376,30 @@
 
 
       onClickResigterComfirm(){
-        let registerEmail = this.resigterUser.email
-        let registerPassword = this.resigterUser.password
-        // 新建 AVUser 对象实例
-        let user = new AV.User();
-        // 设置用户名
-        user.setUsername(registerEmail);
-        // 设置密码
-        user.setPassword(registerPassword);
-        user.signUp().then(function (loginedUser) {
-          this.dialogFormVisibleRegister = false
-          this.dialogFormVisible = true
-          // 保存到云端
+        if(this.resigterUser.password !== this.resigterUser.comfirmPassword){
+          alert("密码不一致")
+          this.resigterUser.password = ""
+          this.resigterUser.comfirmPassword = ""
+        } else {
+          let registerEmail = this.resigterUser.email
+          let registerPassword = this.resigterUser.password
+          // 新建 AVUser 对象实例
+          let user = new AV.User();
+          // 设置用户名
+          user.setUsername(registerEmail);
+          // 设置密码
+          user.setPassword(registerPassword);
+          user.signUp().then(function (loginedUser) {
+            this.dialogFormVisibleRegister = false
+            this.dialogFormVisible = true
+            // 保存到云端
 
 
-        }.bind(this), function (error) {
-          console.log(error)
-        });
+          }.bind(this), function (error) {
+            console.log(error)
+          });
+        }
+
       },
       _initAV(){
         var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
