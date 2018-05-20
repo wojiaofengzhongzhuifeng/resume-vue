@@ -333,10 +333,10 @@
         let logInEmail = this.logInUser.email
         let logInPassword = this.logInUser.password
         AV.User.logIn(logInEmail, logInPassword).then(function (loginedUser) {
+          // 登录成功
           if(!loginedUser.attributes.information){
             this.currentUser.id =loginedUser.id
           } else{
-            console.log(3)
             let information = JSON.parse(loginedUser.attributes.information)
             this.information = information
             this.currentUser.id =loginedUser.id
@@ -346,6 +346,47 @@
           this.shareUrl = shareUrl
           this.dialogFormVisible = false
           this.createAvatar(this.currentUser.id)
+
+          // 载入hr的信息
+          // var todo = AV.Object.createWithoutData('userAndHrContact', "5b01905efb4ffe005d6775e4")
+          // todo.fetch().then(function () {
+          //   var userId = todo.get('userId');// 读取 title
+          //   console.log(userId)
+          //   var hrInformation = todo.get("hrInformation")
+          //   console.log(hrInformation)
+          // }, function (error) {
+          //   // 异常处理
+          // });
+
+          var query = new AV.Query('userAndHrContact');
+          query.find().then(function (todos) {
+
+
+            console.log(todos)
+
+            let obj = {}
+            for(let i=0;i<todos.length;i++){
+              let userId = todos[i].attributes.userId
+              let information = todos[i].attributes.hrInformation
+              if(!obj[userId]){
+                obj[userId] = []
+                obj[userId].push(information)
+              } else {
+                obj[userId].push(information)
+              }
+            }
+            console.log(obj)
+
+
+          }).then(function(todos) {
+            // 更新成功
+          }, function (error) {
+            // 异常处理
+          });
+
+
+
+
         }.bind(this), function (error) {
           alert("账号或者密码错误")
         }.bind(this));
