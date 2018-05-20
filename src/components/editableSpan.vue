@@ -2,8 +2,8 @@
     <span class="editbleSpan">
       <span class="show" @click="changeEditOn">{{informationDetail}}</span>
       <span class="input-button-ct">
-        <input class="inputArea" v-show="edit">
-        <button class="inputButton" type="primary" v-show="edit" @click="changeEditOffAndListenInputValue">编辑</button>
+        <input class="inputArea" v-show="edit" @keypress="onPressEnter">
+        <button class="inputButton" type="primary" v-show="edit" @click="changeEditOffAndListenInputValue" ref="edit">编辑</button>
       </span>
     </span>
 </template>
@@ -22,10 +22,15 @@
             this.edit = true
           },
           changeEditOffAndListenInputValue(e){
-            console.log(111)
+            console.log(e)
             this.edit = false
             let inputValue = e.target.parentNode.querySelector("input").value
             this.$emit("typeInput", inputValue)
+          },
+          onPressEnter(e){
+            if(e.code === "Enter"){
+              this.$refs.edit.click()
+            }
           }
         }
     }
