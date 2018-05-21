@@ -121,10 +121,12 @@
     </el-dialog>
 
 
-    <el-dialog title="用户消息" :visible.sync="dialogMessage">
+    <el-dialog title="用户消息" :visible.sync="dialogMessage" class="alertMessage">
       <ul>
-        <li v-for="message in allUserHrInformationArr">
-          <span>{{message.email}}</span> : <span>{{message.message}}</span>
+        <li v-for="(message,index) in allUserHrInformationArr"  class="hrInformation">
+          <i class="el-icon-close xxxx" @click="onClickCloseHrMessage(index)"></i>
+          <!--<i class="el-icon-close projectLi" @click="onClickCloseProject(index)"  v-show="previewModel"></i>-->
+          <span class="hrEmail">{{message.email}}</span> : <span>{{message.message}}</span>
         </li>
       </ul>
     </el-dialog>
@@ -275,6 +277,11 @@
       }
     },
     methods:{
+      onClickCloseHrMessage(index){
+        console.log(index)
+        this.allUserHrInformationArr.splice(index, 1)
+
+      },
       registerComfirm(){
         let asdfg = document.querySelector("#asdfg")
         asdfg.click()
@@ -753,6 +760,19 @@
   }
   h1  span.editbleSpan button{
     border:1px solid red
+  }
+  .hrEmail{
+    color: #303133;
+    font-weight: bold;
+    padding:10px;
+  }
+  .hrInformation{
+    position: relative;
+    margin:10px 0;
+    box-shadow: 0 1px 4px grey;
+  }
+  .alertMessage .xxxx{
+    position:absolute;
   }
 </style>
 
