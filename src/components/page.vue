@@ -161,6 +161,11 @@
     created(){
       this._initAV()
     },
+    watch:{
+      allUserHrInformationArr:function(){
+        console.log("hr来信息啦")
+      }
+    },
     mounted(){
       let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
       this.previewUser.id = previewUser
@@ -175,8 +180,6 @@
           // 异常处理
         });
       }
-
-
     },
     computed: {
       previewModel: function () {
@@ -278,7 +281,6 @@
     },
     methods:{
       onClickCloseHrMessage(index){
-        console.log(index)
         this.allUserHrInformationArr.splice(index, 1)
 
       },
@@ -289,7 +291,6 @@
       logInEnter(e){
         // this.$refs.edit.click()
         let asdf = document.querySelector("#asdf")
-        console.log(asdf)
         asdf.click()
       },
       saveHrInformation(e){
@@ -302,10 +303,8 @@
         information.set('userId',previewUserId);
         information.set('hrInformation',JSON.stringify(this.hrInformation));
         information.save().then(function (todo) {
-          console.log('objectId is ' + todo.id);
           alert("成功向应聘者提交你的信息")
         }, function (error) {
-          console.error(error);
         });
 
       },
@@ -319,10 +318,8 @@
           let keys = point.split(".").slice(2)
           for (let i = 0; i < keys.length; i++) {
             if (i !== keys.length - 1) {
-              console.log(2)
               result = result[keys[i]]
             } else {
-              console.log(1)
               result[keys[i]] = e
             }
           }
@@ -347,12 +344,10 @@
       },
       onClickCloseSkill(index){
         // this.information.skills
-        console.log(index)
         this.information.skills.splice(index, 1)
       },
       onClickCloseProject(index){
         // this.information.skills
-        console.log(index)
         this.information.works.splice(index, 1)
       },
       onClickRegister(){
@@ -399,17 +394,12 @@
                 _this.allUserHrInformation = obj[key]
               }
             }
-            console.log("_this.allUserHrInformation")
-            console.log(_this.allUserHrInformation)
 
 
             let arr = []
             // 将每项3message由json变成对象
             for(let i=0;i<_this.allUserHrInformation.length;i++){
-              console.log(1)
-              console.log(JSON.parse(_this.allUserHrInformation[i]))
               arr.push(JSON.parse(_this.allUserHrInformation[i]))
-              console.log(arr)
               _this.allUserHrInformationArr = arr
             }
 
@@ -503,7 +493,7 @@
 
 
           }.bind(this), function (error) {
-            console.log(error)
+
           });
         }
 
@@ -527,10 +517,6 @@
         }
 
       },
-      ContactMe(e){
-        console.log(1)
-        console.log(e)
-      }
     },
     components:{
       editableSpan
