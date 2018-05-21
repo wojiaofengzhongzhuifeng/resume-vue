@@ -12,15 +12,15 @@
           <el-button type="primary" @click="onclickSave">保存</el-button>
         </li>
         <li class="share">
-          <el-button type="primary" @click="dialogVisible = true">分享</el-button>
+          <el-button type="primary" @click="dialogVisible = true" v-show="currentUser.id">分享</el-button>
         </li>
         <li class="print">
-          <el-button type="primary" @click="onClickPrint">打印</el-button>
+          <el-button type="primary" @click="onClickPrint" v-show="currentUser.id">打印</el-button>
         </li>
 
         <li class="message" v-show="this.currentUser.id">
           <el-button type="primary" @click="dialogMessage=true">消息</el-button>
-          <span class="number">{{this.allUserHrInformationArr.length}}</span>
+          <span class="number" v-show="this.allUserHrInformationArr.length > 0">{{this.allUserHrInformationArr.length}}</span>
         </li>
       </ul>
       <el-button type="danger" @click="onClickLogOut" v-show="currentUser.id">登出</el-button>
@@ -59,11 +59,9 @@
         <ul v-for="(work, index) in information.works">
           <li class="project">
             <i class="el-icon-close projectLi" @click="onClickCloseProject(index)"  v-show="previewModel"></i>
-            <header>
-              <h3 class="projectName"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
-                <span class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></span>
-                <span class="keywords"> <editableSpan  :informationDetail="work.needSkills"   @typeInput="listenInput($event, `works.${index}.needSkills`)"></editableSpan></span>
-            </header>
+            <h3 class="projectName"> <editableSpan  :informationDetail="work.name"   @typeInput="listenInput($event, `works.${index}.name`)"></editableSpan></h3>
+            <p class="link"> <editableSpan  :informationDetail="work.url"   @typeInput="listenInput($event, `works.${index}.url`)"></editableSpan></p>
+            <p class="keywords"> <editableSpan  :informationDetail="work.needSkills"   @typeInput="listenInput($event, `works.${index}.needSkills`)"></editableSpan></p>
             <p class="description"> <editableSpan  :informationDetail="work.description"   @typeInput="listenInput($event, `works.${index}.description`)"></editableSpan></p>
           </li>
         </ul>
@@ -93,13 +91,13 @@
           <el-input auto-complete="off" v-model="logInUser.email"  ></el-input>
         </el-form-item>
         <el-form-item label="密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off" type="password"   v-model="logInUser.password"></el-input>
+          <el-input auto-complete="off" type="password"   v-model="logInUser.password" @keyup.enter.native="logInEnter"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="success" @click="onClickRegister">注 册</el-button>
         <el-button class="cancel" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onClicklogInComfirm">确 定</el-button>
+        <el-button type="primary" @click="onClicklogInComfirm" ref="logInComfirm" id="asdf">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -114,11 +112,11 @@
           <el-input auto-complete="off"  type="password" v-model="resigterUser.password" ref="registerPassword"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" :label-width="formLabelWidth">
-          <el-input auto-complete="off"  type="password" v-model="resigterUser.comfirmPassword"  ref="registerPasswordComfirm"></el-input>
+          <el-input auto-complete="off"  type="password" v-model="resigterUser.comfirmPassword"  ref="registerPasswordComfirm" @keyup.enter.native="registerComfirm"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onClickResigterComfirm">确 定</el-button>
+        <el-button type="primary" @click="onClickResigterComfirm"  id="asdfg" >确 定</el-button>
       </div>
     </el-dialog>
 
@@ -134,8 +132,9 @@
     <el-dialog
       title="提示"
       :visible.sync="dialogVisible"
-      width="30%">
-      <p>{{shareUrl}}</p>
+      width="50%">
+      <p>请将下面内容分享</p>
+      <el-input v-model="shareUrl"></el-input>
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -276,6 +275,16 @@
       }
     },
     methods:{
+      registerComfirm(){
+        let asdfg = document.querySelector("#asdfg")
+        asdfg.click()
+      },
+      logInEnter(e){
+        // this.$refs.edit.click()
+        let asdf = document.querySelector("#asdf")
+        console.log(asdf)
+        asdf.click()
+      },
       saveHrInformation(e){
 
         let previewUserId = this.previewUser.id
@@ -611,11 +620,11 @@
     margin: 20px 0;
   }
   .el-button--danger {
-    position: fixed;
+    position: absolute;
     width: 100px;
     height: 50px;
     bottom: 20px;
-    left: 60px;
+    left: 50px;
   }
 
 
@@ -660,6 +669,7 @@
 
   .projects{
     text-align: center;
+    margin-top:20px;
   }
   .projects>ul{
     position: relative;
@@ -669,19 +679,16 @@
     border-radius: 5px;
     margin:5px 0;
     padding:5px;
+    text-align: left;
+    padding:10px;
   }
-  .project header{
-    display: flex;
-    justify-content:space-between;
-    height: 46px;
-    line-height: 46px;
+  .project p, .project h3{
+    margin-bottom:10px;
+    border-left:1px solid grey;
+    padding-left:5px;
   }
   .project .start{
     display:flex;
-  }
-  h3.projectName, span.link,span.keywords{
-    text-align: left;
-    width:33%
   }
   .el-icon-close.projectLi{
     position: absolute;
@@ -743,6 +750,9 @@
     color: white;
     width: 20px;
     border-radius: 50%;
+  }
+  h1  span.editbleSpan button{
+    border:1px solid red
   }
 </style>
 

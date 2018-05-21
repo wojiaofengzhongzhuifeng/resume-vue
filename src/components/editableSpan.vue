@@ -25,7 +25,12 @@
             console.log(e)
             this.edit = false
             let inputValue = e.target.parentNode.querySelector("input").value
-            this.$emit("typeInput", inputValue)
+            if(!inputValue){
+              alert("请输入内容")
+            } else{
+              this.$emit("typeInput", inputValue)
+            }
+
           },
           onPressEnter(e){
             if(e.code === "Enter"){
@@ -80,4 +85,5 @@
       color: #fff;
       background-color: #409EFF;
       border-color: #409EFF;
+      margin-left:3px;
 </style>
