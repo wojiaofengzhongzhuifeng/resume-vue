@@ -181,9 +181,6 @@
           // 异常处理
         });
       }
-      this.$nextTick(function () {
-        setInterval(this.xxxxxx, 5000);
-      })
     },
     computed: {
       previewModel: function () {
@@ -284,42 +281,6 @@
       }
     },
     methods:{
-      xxxxxx(){
-
-
-        var query = new AV.Query('userAndHrContact');
-        query.find().then(function (todos) {
-          let obj = {}
-          let obj1 = {}
-          for(let i=0;i<todos.length;i++){
-            let userId = todos[i].attributes.userId
-            let information = todos[i].attributes.hrInformation
-            if(!obj[userId]){
-              obj[userId] = []
-              obj[userId].push(information)
-            } else {
-              obj[userId].push(information)
-            }
-          }
-
-
-          for(let key in obj){
-            if(key === this.currentUser.id){
-              this.allUserHrInformation = obj[key]
-            }
-          }
-          console.log(this.allUserHrInformation)
-
-          let arr = []
-          // 将每项3message由json变成对象
-          for(let i=0;i<this.allUserHrInformation.length;i++){
-            arr.push(JSON.parse(this.allUserHrInformation[i]))
-            this.allUserHrInformationArr = arr
-          }
-
-
-        })
-      },
       onClickCloseHrMessage(index){
         this.allUserHrInformationArr.splice(index, 1)
 
