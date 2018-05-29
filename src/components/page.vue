@@ -124,11 +124,13 @@
     <el-dialog title="用户消息" :visible.sync="dialogMessage" class="alertMessage">
       <ul>
         <li v-for="(message,index) in allUserHrInformationArr"  class="hrInformation">
-          <i class="el-icon-close xxxx" @click="onClickCloseHrMessage(index)"></i>
+          <!-- <i class="el-icon-close xxxx" @click="onClickCloseHrMessage(index)"></i> -->
           <!--<i class="el-icon-close projectLi" @click="onClickCloseProject(index)"  v-show="previewModel"></i>-->
           <span class="hrEmail">{{message.email}}</span> : <span>{{message.message}}</span>
+          <i class="el-icon-close closeHrInformation" @click="onClickHrInformation(index)"></i>
         </li>
       </ul>
+
     </el-dialog>
 
     <el-dialog
@@ -163,13 +165,22 @@
     },
     watch:{
       allUserHrInformationArr:function(){
-        console.log("hr来信息啦")
 
       }
     },
     mounted(){
-      let previewUser = window.location.search.substring(window.location.search.indexOf("=") + 1)
+
+      let url =  window.location.href
+      let num = url.indexOf("=")
+
+      let previewUser = url.slice(num + 1)
+      console.log(previewUser)
+      if(previewUser.indexOf("http") !== -1){
+        previewUser = ""
+      }
       this.previewUser.id = previewUser
+
+
       var query = new AV.Query('User');
       if(!previewUser){
         // 不做任何事情
@@ -281,8 +292,25 @@
       }
     },
     methods:{
-      onClickCloseHrMessage(index){
-        this.allUserHrInformationArr.splice(index, 1)
+      onClickHrInformation(index){
+        // 前端，没有改变leanCloud的数据
+        let closeEmail = this.allUserHrInformationArr[index].email
+
+
+        // 根据关闭的email删除leanCloud中的对应数据
+        var query = new AV.Query('userAndHrContact');
+        query.find().then(function (information) {
+          information.forEach((everyInformation, index)=>{
+            let hrInformation = JSON.parse(everyInformation.attributes.hrInformation)
+            let hrEmail = hrInformation.email
+            if(closeEmail === hrEmail){
+              console.log(closeEmail)
+              information.splice(index, 1)
+              console.log(information)
+            }
+          })
+        })
+
 
       },
       registerComfirm(){
@@ -346,6 +374,7 @@
       onClickCloseSkill(index){
         // this.information.skills
         this.information.skills.splice(index, 1)
+        console.log(this.c)
       },
       onClickCloseProject(index){
         // this.information.skills
@@ -367,8 +396,9 @@
             this.information = information
             this.currentUser.id =loginedUser.id
           }
-
-          let shareUrl = location.origin + "?user_id=" + this.currentUser.id
+          console.log("location")
+          console.log(location)
+          let shareUrl = location.href + "?user_id=" + this.currentUser.id
           this.shareUrl = shareUrl
           this.dialogFormVisible = false
           this.createAvatar(this.currentUser.id)
@@ -403,6 +433,8 @@
               arr.push(JSON.parse(_this.allUserHrInformation[i]))
               _this.allUserHrInformationArr = arr
             }
+
+
 
 
 
@@ -538,7 +570,7 @@
     display:flex;
   }
   aside{
-    width:200px;
+
     position: relative;
     height:100vh;
     text-align:center;
@@ -618,7 +650,7 @@
     width: 100px;
     height: 50px;
     bottom: 20px;
-    left: 50px;
+    left: 25px;
   }
 
 
@@ -739,7 +771,7 @@
   .number{
     position:absolute;
     top: 17px;
-    right: 48px;
+    right: 22px;
     background: red;
     color: white;
     width: 20px;
@@ -760,6 +792,17 @@
   }
   .alertMessage .xxxx{
     position:absolute;
+  }
+
+
+  #app{
+    display:flex;
+  }
+  aside{
+    width:150px;
+  }
+  main{
+    flex-grow:1
   }
 </style>
 
