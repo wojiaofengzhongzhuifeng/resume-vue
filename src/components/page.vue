@@ -296,20 +296,36 @@
         // 前端，没有改变leanCloud的数据
         let closeEmail = this.allUserHrInformationArr[index].email
 
-
+        let _this = this
         // 根据关闭的email删除leanCloud中的对应数据
+
         var query = new AV.Query('userAndHrContact');
         query.find().then(function (information) {
           information.forEach((everyInformation, index)=>{
             let hrInformation = JSON.parse(everyInformation.attributes.hrInformation)
             let hrEmail = hrInformation.email
             if(closeEmail === hrEmail){
-              console.log(closeEmail)
-              information.splice(index, 1)
-              console.log(information)
+              let deleteId = information[index].id
+
+              // 根据id删除信息
+              var todo = AV.Object.createWithoutData('userAndHrContact', deleteId);
+              todo.destroy().then(function (success) {
+                // 删除成功
+                alert("已读")
+              }, function (error) {
+                // 删除失败
+              });
+
             }
           })
+
         })
+
+
+
+
+        this.allUserHrInformationArr.splice(index, 1)
+
 
 
       },
