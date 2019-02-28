@@ -1,6 +1,5 @@
-# resume
-
-> A Vue.js project
+## 注意
+1. leanCloud 会将三个月没有数据访问的应用归档，所以想展示应用功能，需要随时更换AV的 APP_ID 和 APP_KEY
 
 ## vue简历制作器
 
@@ -14,22 +13,3 @@
 4. 随机生成头像
 5. 打印功能
 
-
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

@@ -548,8 +548,8 @@
 
       },
       _initAV(){
-        var APP_ID = 'eqtNEtnaMt1BxxbMHdUKHQkR-gzGzoHsz';
-        var APP_KEY = 'e99EIvtO7RE41XNDgye1AdwE';
+        var APP_ID = 'bKMp4lkqI40hSbi38Wi0v6xi-gzGzoHsz';
+        var APP_KEY = 'TRzipeKvcEg6cUMFnF4zwIAg';
         AV.init({
           appId: APP_ID,
           appKey: APP_KEY
